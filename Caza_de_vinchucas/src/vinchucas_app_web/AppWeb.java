@@ -8,14 +8,24 @@ public class AppWeb {
 	private	List<TipoVinchuca>	tipos;
 	private	List<Verificacion>	verificaciones;
 	private List<Muestra>		muestras;
+	private List<Experiencia>	rangos;
 
 	public AppWeb() {
 		this.tipos = new ArrayList<>();
 		definirTipos();
 		this.verificaciones = new ArrayList<>();
 		definirNiveles();
+		this.rangos = new ArrayList<>();
+		definirRangos();
 	}
 	
+	private void definirRangos() {
+		List<Experiencia> iniciales = new ArrayList<>();
+		iniciales.add( new Experiencia("Basico") );
+		iniciales.add( new Experiencia("Experto") );
+		this.rangos = iniciales;
+	}
+
 	/**
 	 * Prop: define los tipos iniciales de verificacion de vinchuca.
 	 */
@@ -66,11 +76,15 @@ public class AppWeb {
 		return this.verificaciones;
 	}
 	
+	public List<Experiencia> getRangos() {
+		return this.rangos;
+	}
+	
 //	--------------	SIN CATEGORIA	--------------
 
 	public void nuevaMuestra(Usuario cazador, TipoVinchuca tipo) {
 		//Aca se calcula el nivel de validacion para instanciar la muestra.
 		this.muestras.add( new Muestra(this, cazador, tipo, nivel) );
 	}
-	
+
 }
