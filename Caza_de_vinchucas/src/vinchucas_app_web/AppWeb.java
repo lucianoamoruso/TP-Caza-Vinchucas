@@ -7,6 +7,7 @@ public class AppWeb {
 	
 	private	List<TipoVinchuca>	tipos;
 	private	List<Verificacion>	verificaciones;
+	private List<Muestra>		muestras;
 
 	public AppWeb() {
 		this.tipos = new ArrayList<>();
@@ -63,6 +64,13 @@ public class AppWeb {
 	
 	public List<Verificacion> getVerificaciones() {
 		return this.verificaciones;
+	}
+	
+//	--------------	SIN CATEGORIA	--------------
+
+	public void nuevaMuestra(Usuario cazador, TipoVinchuca tipo) {
+		//Aca se calcula el nivel de validacion para instanciar la muestra.
+		this.muestras.add( new Muestra(this, cazador, tipo, nivel) );
 	}
 	
 }
