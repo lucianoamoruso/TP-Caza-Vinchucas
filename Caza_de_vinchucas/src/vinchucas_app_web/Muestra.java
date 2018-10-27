@@ -13,14 +13,17 @@ public class Muestra {
 	private	List<Verificacion>	verificaciones;
 	private	Verificacion		verificacion;
 	private String				fotografia;
-	private String				ubicacion;
-	private String				cazador;
+	private Ubicacion			ubicacion;
+	private Usuario				cazador;
 	
 	public Muestra(AppWeb sistema, Usuario cazador, TipoVinchuca tipo) {
 		this.sistema = sistema;
-		this.tipos = sistema.getTiposVinchuca();
 		this.tipoVinchuca = tipo;
-		this.verificaciones = sistema.getVerificaciones();
+		verificacionInicial(cazador.getRango());
+	}
+
+	private void verificacionInicial(Experiencia rango) {
+		//Aca se calcula el nivel de verificacion inicial a partir del rango del cazador.
 	}
 	
 }

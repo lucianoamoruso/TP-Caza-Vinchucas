@@ -82,9 +82,16 @@ public class AppWeb {
 	
 //	--------------	SIN CATEGORIA	--------------
 
-	public void nuevaMuestra(Usuario cazador, TipoVinchuca tipo) {
-		//Aca se calcula el nivel de validacion para instanciar la muestra.
-		this.muestras.add( new Muestra(this, cazador, tipo, nivel) );
+	/**
+	 * Prop: agrega una nueva muestra al sistema.
+	 * @param muestra	la muestra a ser agregada.
+	 */
+	public void nuevaMuestra(Muestra muestra) {
+		this.muestras.add(muestra);
+	}
+
+	public Experiencia rangoInicial() {
+		//Se hace un stream filter y se consigue el rango "basico". 
 	}
 
 }

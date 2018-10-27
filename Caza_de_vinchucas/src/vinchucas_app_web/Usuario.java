@@ -10,15 +10,20 @@ public class Usuario {
 	
 	public Usuario() {
 		this.rangos = sistema.getRangos();
-		this.experiencia = ;
+		this.experiencia = sistema.rangoInicial();
 	}
 
-	public void enviarMuestra() {
-		this.sistema.nuevaMuestra();
+	public void enviarMuestra(TipoVinchuca tipo) {
+		Muestra muestra = new Muestra(sistema, this, tipo);
+		this.sistema.nuevaMuestra(muestra);
 	}
 	
 	public void verificarMuestra() {
-		this.sistema.verificarMuestra();
+		this.sistema.verificarMuestra(this.experiencia);
+	}
+	
+	public Experiencia getRango() {
+		return this.experiencia;
 	}
 	
 }
