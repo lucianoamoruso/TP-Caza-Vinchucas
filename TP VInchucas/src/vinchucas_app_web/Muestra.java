@@ -8,17 +8,20 @@ import java.util.List;
  */
 public class Muestra {
 	
-	private Participante recolector;
-	private TipoVinchuca tipoVinchuca;
-	private	List<Verificacion> verificaciones;
-	private Ubicacion ubicacion;
+	private AppWeb						sistema;
+	private Participante				recolector;
+	private TipoVinchuca				tipoVinchuca;
+	private	List<Verificacion>			verificaciones;
+	private Ubicacion					ubicacion;
+	private List<VotosDeVerificacion>	valoraciones;
 	
-	public Muestra(Participante recolector, Ubicacion ubicacion, TipoVinchuca tipoVinchuca) {
-		
+	public Muestra(AppWeb sistema, Participante recolector, Ubicacion ubicacion, TipoVinchuca tipoVinchuca) {
+		this.sistema = sistema;
 		this.recolector = recolector;
 		this.ubicacion = ubicacion;
 		this.tipoVinchuca = tipoVinchuca;
 		this.verificaciones = new ArrayList<Verificacion>();
+		this.valoraciones = sistema.votacionesDisponibles();
 	}
 	
 	

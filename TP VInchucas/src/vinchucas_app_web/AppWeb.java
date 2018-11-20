@@ -54,5 +54,14 @@ public class AppWeb {
 	public List<Muestra> getMuestras(){
 		return this.muestras;
 	}
+	
+	public List<VotosDeVerificacion> votacionesDisponibles() {
+		List<VotosDeVerificacion> disponibles = new ArrayList<>();
+		
+		for (TipoVinchuca tipo : this.tipos) {
+			disponibles.add(new VotosDeVerificacion(tipo.getNombre()));
+		}
+		return disponibles;
+	}
 
 }
