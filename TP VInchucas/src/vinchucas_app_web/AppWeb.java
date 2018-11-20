@@ -7,11 +7,13 @@ public class AppWeb {
 	
 	private	List<TipoVinchuca>	tipos;
 	private List<Muestra>		muestras;
+	private List<ZonaDeCobertura> zonasDeCobertura;
 
 	public AppWeb() {
 		this.tipos = new ArrayList<>();
 		definirTipos();
 		this.muestras = new ArrayList<Muestra>();
+		this.zonasDeCobertura = new ArrayList<ZonaDeCobertura>();
 	}
 
 	/**
@@ -46,22 +48,38 @@ public class AppWeb {
 	/**
 	 * Prop: agrega una nueva muestra al sistema.
 	 * @param muestra	la muestra a ser agregada.
+	 * Si la muestra esta en la region de alguna de las zonas de cobertura reporta la misma en las zonas.
 	 */
 	public void nuevaMuestra(Muestra muestra) {
 		this.muestras.add(muestra);
+		for(ZonaDeCobertura zona : zonasDeCobertura) {
+			if(zona.getEpicentro().distanciaEntreDosUbicaciones(zona.getEpicentro(), muestra.getUbicacion()) < zona.getRadio()) {
+				zona.reportarMuestra(muestra);
+			}
+		}
 	}
 	
+	/*
+	 * Retorna todas las muestras.
+	 */
 	public List<Muestra> getMuestras(){
 		return this.muestras;
 	}
-	
-	public List<VotosDeVerificacion> votacionesDisponibles() {
-		List<VotosDeVerificacion> disponibles = new ArrayList<>();
-		
-		for (TipoVinchuca tipo : this.tipos) {
-			disponibles.add(new VotosDeVerificacion(tipo.getNombre()));
-		}
-		return disponibles;
+
+	/*
+	 * agrega una zona de cobertura.
+	 */
+	public void addZonaDeCobertura(ZonaDeCobertura zona) {
+		zonasDeCobertura.add(zona);
 	}
+	
+	/*
+	 * Retorna una lista con las zonas de cobertura.
+	 */
+	public List<ZonaDeCobertura> getZonasDeCobertura() {
+		return this.zonasDeCobertura;
+	}
+	
+	
 
 }
