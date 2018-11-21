@@ -10,8 +10,16 @@ public class VotosDeVerificacion {
 		this.puntos = 0;
 	}
 	
+	public void votar(Participante verificador) {
+		this.puntos += verificador.getValorDeConocimiento();
+	}
+
 	public String getNombre() {
 		return this.nombre;
 	}
 	
+	public int getPuntos() {
+		return this.puntos;
+	}
+
 }

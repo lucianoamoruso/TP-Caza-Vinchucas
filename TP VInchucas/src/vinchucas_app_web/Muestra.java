@@ -1,7 +1,9 @@
 package vinchucas_app_web;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Representa una muestra tomada en el sistema web de Caza de Vinchucas.
@@ -24,8 +26,8 @@ public class Muestra {
 		this.valoraciones = sistema.votacionesDisponibles();
 	}
 	
-	
-	/* Agrega una verificacion a la lista de Verificaciones, si la 
+	/**
+	 * Prop: agrega una verificacion a la lista de Verificaciones, si la 
 	 * muestra ya tiene el maximo de verificaciones avisa que ya tiene 
 	 * el numero maximo de verificaciones.
 	 */
@@ -37,85 +39,58 @@ public class Muestra {
 				throw new RuntimeException("La muestra ya tiene el numero máximo de verificaciones posibles");
 			} else {
 				this.verificaciones.add(verificacion);
+				votarPorVerificacion(verificacion);
 			}
 		}
 	}
 	
-	/*
-	 * Retorna la ubicacion donde fue tomada la muestra.
+	/**
+	 * Prop: agrega puntos a la valoracion de su lista que corresponda con el tipo de vinchuca recibido.
 	 */
-	public Ubicacion getUbicacion() {
-		return this.ubicacion;
-	}
-
-	/*
-	 * Retorna el tipo de vinchuca que el recolector propuso.
-	 */
-	public TipoVinchuca getTipoVinchuca() {
-		return this.tipoVinchuca;
+	private void votarPorVerificacion(Verificacion verificacion) {
+		String nombre = verificacion.getTipoVinchuca().getNombre();
+		VotosDeVerificacion valoracion = this.valoraciones.stream()
+				.filter(val -> nombre == val.getNombre())
+				.findAny()
+				.orElse(null);
+		valoracion.votar(verificacion.getVerificador());
 	}
 	
-	/*
-	 * Retorna el alias del recolector.
+	/**
+	 * Prop: retorna el alias del recolector.
 	 */
 	public String aliasDelRecolector() {
 		return this.recolector.getAlias();
 	}
 	
-	
-	/*
-	 * Devuelve una lista con los participantes que 
+	/**
+	 * Prop: devuelve una lista con los participantes que 
 	 * hasta el momento verificaron la muestra.
 	 */
 	public List<Participante> getVerificadores(){
 		List<Participante> retorno = new ArrayList<Participante>();
+		
 		for (Verificacion verificacion : this.verificaciones) {
 			retorno.add(verificacion.getVerificador());
 		}
-		
 		retorno.add(this.recolector);
-		
 		return retorno;
 	}
-	
-	/*
-	 * Es el valor de Verificacion inicial de la muestra.
-	 */
-	public Integer veracidadDeLaMuestra(){
-		return this.recolector.getValorDeConocimiento();
+		
+	public int valorDeVerificacion() {
+		VotosDeVerificacion predominante = this.valoraciones.stream().reduce((a,b) ->
+				a.getPuntos() > b.getPuntos() ? a : b)
+				.get();
+		return predominante.getPuntos();
 	}
 	
-	
-	/* Si los tipos de vinchuca de las demas verificaciones coinciden
-	 * con el tipo de vinchuca de la muestra, se suman con el valor de
-	 * veracidad de la muestra, sino se restan, y deuelven el resultado.
-	 */
-	public Integer valorDeVerificacionDeLaMuestra() {
-		Integer valorDeVerificacion = this.veracidadDeLaMuestra();
-		
-		for(Verificacion verificacion : this.verificaciones) {
-			if(verificacion.getTipoVinchuca().equals(this.getTipoVinchuca())) {
-				valorDeVerificacion += verificacion.valorDeVerificacion();
-			} else {
-				valorDeVerificacion -= verificacion.valorDeVerificacion();
-			}
-		}
-		
-		if(valorDeVerificacion < 0) {
-			valorDeVerificacion *= -1;
-		}
-		
-		return valorDeVerificacion;
-	}
-	
-	
-	/*
-	 * Segun el valor de verificacion que tenga la muestra
+	/**
+	 * Prop: segun el valor de verificacion que tenga la muestra
 	 * se calcula si es baja, media o alta.
 	 */
 	public String nivelDeVerficacion() {
 		
-		Integer valor = this.valorDeVerificacionDeLaMuestra();
+		Integer valor = valorDeVerificacion();
 		
 		if(valor == 1) {
 			return "Baja";
@@ -125,4 +100,15 @@ public class Muestra {
 			return"Alta";
 		}
 	}
+	
+//---------------------- GETTERS Y SETTERS ----------------------
+
+	public Ubicacion getUbicacion() {
+		return this.ubicacion;
+	}
+
+	public TipoVinchuca getTipoVinchuca() {
+		return this.tipoVinchuca;
+	}
+
 }

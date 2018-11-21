@@ -24,7 +24,7 @@ public class Participante{
 	 */
 	public void enviarMuestra(Ubicacion ubicacion, TipoVinchuca tipo) {
 		
-		Muestra muestra = new Muestra(this, ubicacion, tipo);
+		Muestra muestra = new Muestra(this.aplicacionWeb, this, ubicacion, tipo);
 		
 		this.aplicacionWeb.nuevaMuestra(muestra);
 		
