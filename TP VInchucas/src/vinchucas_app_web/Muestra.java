@@ -1,9 +1,7 @@
 package vinchucas_app_web;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Representa una muestra tomada en el sistema web de Caza de Vinchucas.
@@ -12,7 +10,6 @@ public class Muestra {
 	
 	private AppWeb						sistema;
 	private Participante				recolector;
-	private TipoVinchuca				tipoVinchuca;
 	private	List<Verificacion>			verificaciones;
 	private Ubicacion					ubicacion;
 	private List<VotosDeVerificacion>	valoraciones;
@@ -21,9 +18,11 @@ public class Muestra {
 		this.sistema = sistema;
 		this.recolector = recolector;
 		this.ubicacion = ubicacion;
-		this.tipoVinchuca = tipoVinchuca;
+		Verificacion inicial = new Verificacion(recolector, tipoVinchuca);
 		this.verificaciones = new ArrayList<Verificacion>();
+		verificaciones.add(inicial);
 		this.valoraciones = sistema.votacionesDisponibles();
+		votarPorVerificacion(inicial);
 	}
 	
 	/**
@@ -35,7 +34,7 @@ public class Muestra {
 		if(this.getVerificadores().contains(verificacion.getVerificador())) {
 			throw new RuntimeException("El participante ya verificó esta muestra");
 		}else {
-			if(this.verificaciones.size() == 2) {
+			if(this.verificaciones.size() > 2) {
 				throw new RuntimeException("La muestra ya tiene el numero máximo de verificaciones posibles");
 			} else {
 				this.verificaciones.add(verificacion);
@@ -76,12 +75,20 @@ public class Muestra {
 		retorno.add(this.recolector);
 		return retorno;
 	}
-		
-	public int valorDeVerificacion() {
+	
+	private VotosDeVerificacion tipoPredominante() {
 		VotosDeVerificacion predominante = this.valoraciones.stream().reduce((a,b) ->
 				a.getPuntos() > b.getPuntos() ? a : b)
 				.get();
-		return predominante.getPuntos();
+		return predominante;
+	}
+		
+	public int valorDeVerificacion() {
+		int total = 0;
+		for (VotosDeVerificacion verif : this.valoraciones) {
+			total += verif.getPuntos();
+		}
+		return total;
 	}
 	
 	/**
@@ -89,16 +96,17 @@ public class Muestra {
 	 * se calcula si es baja, media o alta.
 	 */
 	public String nivelDeVerficacion() {
-		
+		String nivel = "Baja";
 		Integer valor = valorDeVerificacion();
 		
-		if(valor == 1) {
-			return "Baja";
-		} else if(valor == 2) {
-			return "Media";
-		} else {
-			return"Alta";
+		if (valor == 2) {
+			nivel = "Media";
 		}
+		if (valor > 2) {
+			nivel = "Alta";
+		}
+		
+		return nivel;
 	}
 	
 //---------------------- GETTERS Y SETTERS ----------------------
@@ -108,7 +116,7 @@ public class Muestra {
 	}
 
 	public TipoVinchuca getTipoVinchuca() {
-		return this.tipoVinchuca;
+		return new TipoVinchuca(tipoPredominante().getNombre());
 	}
 
 }

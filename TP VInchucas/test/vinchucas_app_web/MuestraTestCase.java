@@ -1,33 +1,46 @@
 package vinchucas_app_web;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
-import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.*;
+import org.junit.Test;
 
-class MuestraTestCase {
+public class MuestraTestCase {
 
-	private AppWeb sistema;
-	private Participante recolector;
-	private Ubicacion ubicacion;
-	private TipoVinchuca tipo;
-	private Muestra muestra;
+	private AppWeb			sistema;
+	private Participante	recolector;
+	private Ubicacion		ubicacion;
+	private TipoVinchuca	tipo;
+	private Muestra			muestra;
 	
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
 		sistema = mock(AppWeb.class);
 		recolector = mock(Participante.class);
 		ubicacion = mock(Ubicacion.class);
 		tipo = mock(TipoVinchuca.class);
-		muestra = new Muestra(sistema, recolector, ubicacion, tipo);
 	}
-	
+
 	@Test
 	public void testConstructorDeUnaNuevaMuestra() {
+		List<VotosDeVerificacion> votosFalsos = new ArrayList<>();
+		votosFalsos.add(new VotosDeVerificacion("Vinchuca"));
+		
 		//Fixture
+		when(sistema.votacionesDisponibles()).thenReturn(votosFalsos);
 		when(recolector.getAlias()).thenReturn("Pedro");
 		when(recolector.getValorDeConocimiento()).thenReturn(1);
+		when(tipo.getNombre()).thenReturn("Vinchuca");
+		
+		//Setup
+		muestra = new Muestra(sistema, recolector, ubicacion, tipo);
 		
 		//Exercise
 		String alias = muestra.aliasDelRecolector();
@@ -37,54 +50,74 @@ class MuestraTestCase {
 		assertEquals("Pedro", alias);
 		assertEquals("Baja", nivelDeVerificacion);
 		assertTrue(muestra.getVerificadores().contains(recolector));
-			
 	}
 	
 	@Test
 	public void testVerificacionConNivelDeVerificacionMedia() {
+		List<VotosDeVerificacion> votosFalsos = new ArrayList<>();
+		votosFalsos.add(new VotosDeVerificacion("Vinchuca"));
+		
+		//Fixture 1
+		when(sistema.votacionesDisponibles()).thenReturn(votosFalsos);
+		when(recolector.getValorDeConocimiento()).thenReturn(1);
+		when(recolector.getAlias()).thenReturn("Pedro");
+		when(tipo.getNombre()).thenReturn("Vinchuca");
+
 		//SetUp
+		muestra = new Muestra(sistema, recolector, ubicacion, tipo);
 		Participante basico = mock(Participante.class);
 		Verificacion verificacion = mock(Verificacion.class);
 		
-		//Fixture
-		when(recolector.getValorDeConocimiento()).thenReturn(1);
-		when(verificacion.valorDeVerificacion()).thenReturn(1);
-		when(verificacion.getTipoVinchuca()).thenReturn(tipo);
+		//Fixture 2
 		when(basico.getValorDeConocimiento()).thenReturn(1);
+		when(basico.getAlias()).thenReturn("Carlos");
+		when(verificacion.getTipoVinchuca()).thenReturn(tipo);
+		when(verificacion.getVerificador()).thenReturn(basico);
 		
 		//Exercise
 		muestra.addVerificacion(verificacion);
+		
 		int valorDeVerificacionDeLaMuestra = muestra.valorDeVerificacion();
 		String nivelDeVerificacion = muestra.nivelDeVerficacion();
 		
+		//Verify
 		assertEquals(2, valorDeVerificacionDeLaMuestra);
 		assertEquals("Media", nivelDeVerificacion);
 	}
 	
 	@Test
 	public void testMuestraCreadaPorUnRecolectorConNivelDeConocimienoAltoYUnParticipanteBasicoDiscrepa() {
+		List<VotosDeVerificacion> votosFalsos = new ArrayList<>();
+		votosFalsos.add(new VotosDeVerificacion("Vinchuca"));
+		votosFalsos.add(new VotosDeVerificacion("Chince Foliada"));
+		
+		//Fixture 1
+		when(sistema.votacionesDisponibles()).thenReturn(votosFalsos);
+		when(recolector.getValorDeConocimiento()).thenReturn(10);
+		when(recolector.getAlias()).thenReturn("Pedro");
+		when(tipo.getNombre()).thenReturn("Vinchuca");
+		
 		//SetUp
+		muestra = new Muestra(sistema, recolector, ubicacion, tipo);
 		Participante basico = mock(Participante.class);
 		TipoVinchuca tipoDelBasico = mock(TipoVinchuca.class);
-		Verificacion verificacion = mock(Verificacion.class);
 		Verificacion verificacionBasico = mock(Verificacion.class); 
 		
 		//Fixture
-		when(recolector.getValorDeConocimiento()).thenReturn(10);
 		when(basico.getValorDeConocimiento()).thenReturn(1);
-		
-		when(verificacion.valorDeVerificacion()).thenReturn(10);
-		when(verificacion.getTipoVinchuca()).thenReturn(tipo);
-		when(verificacionBasico.valorDeVerificacion()).thenReturn(1);
+		when(tipoDelBasico.getNombre()).thenReturn("Chince Foliada");
 		when(verificacionBasico.getTipoVinchuca()).thenReturn(tipoDelBasico);
+		when(verificacionBasico.getVerificador()).thenReturn(basico);
 		
 		//Exercise
 		muestra.addVerificacion(verificacionBasico);
+		
 		int valorDeVerificacion = muestra.valorDeVerificacion();
 		String nivelDeVerificacion = muestra.nivelDeVerficacion();
 		
 		//Verify
-		assertEquals(9, valorDeVerificacion);
+		assertEquals(11, valorDeVerificacion);
 		assertEquals("Alta", nivelDeVerificacion);
 	}
+	
 }
