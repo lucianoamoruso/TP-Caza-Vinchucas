@@ -10,7 +10,6 @@ class ParticipanteTestCase {
 
 	private Participante participante; //SUT
 	private AppWeb aplicacion;
-	private Ubicacion ubicacion;
 	private TipoVinchuca tipo;
 	private Muestra muestra;
 	private NivelDeConocimientoBasico nivel;
@@ -19,7 +18,6 @@ class ParticipanteTestCase {
 	public void setUp() { //SetUp
 		nivel = mock(NivelDeConocimientoBasico.class);
 		aplicacion = mock(AppWeb.class);
-		ubicacion = mock(Ubicacion.class); // Dummy
 		tipo = mock(TipoVinchuca.class); //Dummy
 		participante = new Participante("Juan", aplicacion, nivel);
 		muestra = mock(Muestra.class);
@@ -41,19 +39,6 @@ class ParticipanteTestCase {
 		assertEquals(0, revisiones);
 		assertEquals(1, valorDeConocimiento);
 		assertEquals("Juan", alias);
-	}
-	
-	@Test
-	public void testParticipanteNuevoEnviaUnaMuestra() {
-		
-		//Exercise
-		participante.enviarMuestra(ubicacion, tipo);
-		
-		
-		//Verify
-		int envios = participante.getCantidadDeEnvios();
-		assertEquals(1, envios);
-		
 	}
 	
 	@Test

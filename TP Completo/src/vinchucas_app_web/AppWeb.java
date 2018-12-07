@@ -14,6 +14,7 @@ public class AppWeb {
 		this.tipos = new ArrayList<>();
 		definirTipos();
 		this.muestras = new ArrayList<Muestra>();
+		this.validaciones = new ArrayList<Muestra>();
 		this.zonasDeCobertura = new ArrayList<ZonaDeCobertura>();
 	}
 
@@ -75,10 +76,17 @@ public class AppWeb {
 	}
 	
 	/*
-	 * Retorna todas las muestras.
+	 * Retorna todas las muestras creadas.
 	 */
 	public List<Muestra> getMuestras(){
 		return this.muestras;
+	}
+	
+	/*
+	 * Retorna todas las muestras validadas.
+	 */
+	public List<Muestra> getValidaciones(){
+		return this.validaciones;
 	}
 
 	/*

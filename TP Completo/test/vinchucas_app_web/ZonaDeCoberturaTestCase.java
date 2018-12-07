@@ -203,4 +203,51 @@ class ZonaDeCoberturaTestCase {
 		assertEquals(expected, actual);
 	}
 	
+	@Test
+	public void testSeRportaUnaMuestraALasOrgaizaciones() {
+		
+		//SetUp
+		zona1 = new ZonaDeCobertura(ubicacion3, 1, "Zona1", aplicacion);
+		
+		Organizacion organizacion1 = mock(Organizacion.class);
+		Organizacion organizacion2 = mock(Organizacion.class);
+		Organizacion organizacion3 = mock(Organizacion.class);
+		muestra1 = mock(Muestra.class);
+		
+		zona1.registrarOrganizacion(organizacion1);
+		zona1.registrarOrganizacion(organizacion2);
+		zona1.registrarOrganizacion(organizacion3);
+		
+		//Exercise
+		zona1.reportarMuestra(muestra1);
+		
+		//Verify
+		verify(organizacion1, times(1)).nuevoEventoMuestra(organizacion1, zona1, muestra1);
+		verify(organizacion2, times(1)).nuevoEventoMuestra(organizacion2, zona1, muestra1);
+		verify(organizacion3, times(1)).nuevoEventoMuestra(organizacion3, zona1, muestra1);
+	}
+	
+	@Test
+	public void testSeRportaUnaValidacionALasOrgaizaciones() {
+		
+		//SetUp
+		zona1 = new ZonaDeCobertura(ubicacion3, 1, "Zona1", aplicacion);
+		
+		Organizacion organizacion1 = mock(Organizacion.class);
+		Organizacion organizacion2 = mock(Organizacion.class);
+		Organizacion organizacion3 = mock(Organizacion.class);
+		muestra1 = mock(Muestra.class);
+		
+		zona1.registrarOrganizacion(organizacion1);
+		zona1.registrarOrganizacion(organizacion2);
+		zona1.registrarOrganizacion(organizacion3);
+		
+		//Exercise
+		zona1.reportarValidacion(muestra1);
+		
+		//Verify
+		verify(organizacion1, times(1)).nuevoEventoValidacion(organizacion1, zona1, muestra1);
+		verify(organizacion2, times(1)).nuevoEventoValidacion(organizacion2, zona1, muestra1);
+		verify(organizacion3, times(1)).nuevoEventoValidacion(organizacion3, zona1, muestra1);
+	}
 }
